@@ -4,27 +4,28 @@
 // Keeps track of the game state and operates the game
 function SimonGame() {
   var KEYS = ['c', 'd', 'e', 'f'];
+  var TIME_LIMIT_INITIAL = 5000; // time user has to begin clicking the sequence
   var TIME_LIMIT = 2500; // time user has to click the next note in sequence
   var TIME_BETWEEN_NOTES = NOTE_DURATION + 500;
-  var DIFFICULTY = 10;
+  var DIFFICULTY = 5;
   var NOTES = {};
 
   var currSeq = [];
   var currIndex = 0;
   var timeoutFn = null;
-  var gameEnd = false;
+  var idleFn = null;
 
-  this.initialize = function() {
-    KEYS.forEach(function (key) {
-      NOTES[key] = new NoteBox(key, handleClick);
-    }.bind(this));
+  function startIdleFn() {
+    var n = 4;
+    idleFn = setInterval(function(){
+      NOTES[KEYS[(n % 4)]].play();
+      n++;
+    }, TIME_BETWEEN_NOTES);
+  }
 
-    KEYS.concat(KEYS.slice().reverse()).forEach(function(key, i) {
-      setTimeout(NOTES[key].play.bind(null, key), i * NOTE_DURATION);
-    });
-
-    startGame();
-  };
+  function stopIdleFn() {
+    clearInterval(idleFn);
+  }
 
   function resetState() {
     currSeq = [];
@@ -45,11 +46,10 @@ function SimonGame() {
     return currSeq.push(pickRandomBox());
   }
 
-  function beginTimerCountdown() {
-    console.log('starting timeout...');
+  function beginTimerCountdown(timelimit) {
     timeoutFn = setTimeout(function(){
       endGame(false, 'timeout');
-    }, TIME_LIMIT);
+    }, timelimit);
   }
 
   function handleClick(key) {
@@ -78,7 +78,7 @@ function SimonGame() {
 
     // continuing as usual in the current sequence
     currIndex++;
-    beginTimerCountdown();
+    beginTimerCountdown(TIME_LIMIT);
   }
 
   function playNextSequence() {
@@ -90,6 +90,9 @@ function SimonGame() {
         n++;
       } else {
         clearInterval(intervalFn);
+
+        // give user time to think
+        beginTimerCountdown(TIME_LIMIT_INITIAL);
       }
     }, TIME_BETWEEN_NOTES);
   }
@@ -109,8 +112,15 @@ function SimonGame() {
 
     console.log('you lost the game... ' + reason);
   }
+
+  this.initialize = function() {
+    KEYS.forEach(function (key) {
+      NOTES[key] = new NoteBox(key, handleClick);
+    }.bind(this));
+
+    // startIdleFn();
+    startGame();
+  };
 }
-console.log('12123');
-// var newGame = new SimonGame();
-// newGame.initialize();
+
 (new SimonGame()).initialize();
