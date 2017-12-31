@@ -32,30 +32,30 @@ function NoteBox(key, onClick) {
 		// Set active class for NOTE_DURATION time
 		boxEl.classList.add('active');
 		setTimeout(function () {
-			playing--
+			playing--;
 			if (!playing) {
 				boxEl.classList.remove('active');
 			}
 		}, NOTE_DURATION)
-	}
+	};
 
 	// Enable this NoteBox
 	this.enable = function () {
 		enabled = true;
-	}
+	};
 
 	// Disable this NoteBox
 	this.disable = function () {
 		enabled = false;
-	}
+	};
 
 	// Call this NoteBox's clickHandler and play the note.
 	this.clickHandler = function () {
 		if (!enabled) return;
 
-		this.onClick(this.key)
+		this.onClick(this.key);
 		this.play()
-	}.bind(this)
+	}.bind(this);
 
 	boxEl.addEventListener('mousedown', this.clickHandler);
 }
