@@ -14,7 +14,6 @@ function Modals() {
       e.stopPropagation();
       self.closeModal(type);
 
-      // TODO: do something about this
       if (type === 'end') {
         self.openModal('start');
       }
