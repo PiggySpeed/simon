@@ -14,7 +14,7 @@ function Modals() {
       e.stopPropagation();
       self.closeModal(type);
 
-      if (type === 'end') {
+      if ((type === 'end') || (type === 'victory') ) {
         self.openModal('start');
       }
     }

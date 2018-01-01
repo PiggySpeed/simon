@@ -1,4 +1,4 @@
-var NOTE_DURATION = 1000;
+var NOTE_DURATION = 750;
 
 // NoteBox
 //

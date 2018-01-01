@@ -3,12 +3,12 @@
 // Keeps track of the game state and operates the game
 function SimonGame() {
   var KEYS = ['c', 'd', 'e', 'f'];
-  var TIME_LIMIT_INITIAL = 5000; // time user has to begin clicking the sequence
-  var TIME_LIMIT_INCREMENT = 1500; // additional time added per note
-  var TIME_BETWEEN_NOTES = NOTE_DURATION + 250;
   var NOTES = {};
 
   var difficulty = 1;
+  var time_limit_increment = 1500; // additional time allocated per note, reduced based on difficulty
+  var time_limit_initial = 5000; // time user has to begin clicking the sequence, reduced based on difficulty
+  var time_between_notes = NOTE_DURATION + 250; // how fast notes are played
   var currSeq = [];
   var currIndex = 0;
   var timeoutFn = null;
@@ -22,6 +22,30 @@ function SimonGame() {
     clearInterval(intervalFn);
     timeoutFn = null;
     intervalFn = null;
+  }
+
+  function setDifficulty(level) {
+    difficulty = level;
+
+    time_limit_initial = {
+      "5": 5000,
+      "10": 3500,
+      "15": 2000
+    }[level];
+
+    time_limit_increment = {
+      "5": 1500,
+      "10": 1000,
+      "15": 500
+    }[level];
+
+    time_between_notes = {
+      "5": NOTE_DURATION + 500,
+      "10": NOTE_DURATION + 250,
+      "15": NOTE_DURATION
+    }[level];
+
+    document.getElementById('diff-label').textContent = ' ' + level;
   }
 
   function pickRandomBox(){
@@ -80,7 +104,7 @@ function SimonGame() {
     }
 
     // player passes victory condition
-    if ((currIndex + 1) === difficulty) {
+    if ((currIndex + 1) === parseInt(difficulty)) {
       endGame(true);
       return;
     }
@@ -89,8 +113,13 @@ function SimonGame() {
     if ((currIndex + 1) === currSeq.length) {
       currIndex = 0;
       clearTimeout(timeoutFn);
-      generateSequence();
-      playNextSequence();
+
+      // add a brief pause
+      disableAllNotes();
+      setTimeout(function() {
+        generateSequence();
+        playNextSequence();
+      }, 1000);
       return;
     }
 
@@ -99,7 +128,6 @@ function SimonGame() {
   }
 
   function playNextSequence() {
-    disableAllNotes();
     hideTimer();
 
     // play all notes in currSeq that the user needs to imitate
@@ -113,16 +141,14 @@ function SimonGame() {
         clearInterval(intervalFn);
 
         // give user time to think
-        beginTimerCountdown(TIME_LIMIT_INITIAL + TIME_LIMIT_INCREMENT * currSeq.length);
+        beginTimerCountdown(time_limit_initial + time_limit_increment * currSeq.length);
       }
-    }, TIME_BETWEEN_NOTES);
+    }, time_between_notes);
   }
 
   // begin the game with a set difficulty level
   function startGame(level) {
-    difficulty = level;
-    document.getElementById('diff-label').textContent = ' ' + level;
-
+    setDifficulty(level);
     generateSequence();
     playNextSequence();
   }
@@ -147,7 +173,6 @@ function SimonGame() {
     modalIn = new Modals();
     modalIn.initialize();
     modalIn.setCallback('start', startGame);
-    modalIn.setCallback('victory', startGame);
     modalIn.openModal('start');
   };
 }
