@@ -36,7 +36,7 @@ function SimonGame() {
     time_limit_increment = {
       "5": 1500,
       "10": 1000,
-      "15": 500
+      "15": 750
     }[level];
 
     time_between_notes = {
