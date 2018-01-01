@@ -1,11 +1,10 @@
-
 // SimonGame
 //
 // Keeps track of the game state and operates the game
 function SimonGame() {
   var KEYS = ['c', 'd', 'e', 'f'];
   var TIME_LIMIT_INITIAL = 5000; // time user has to begin clicking the sequence
-  var TIME_LIMIT = 2500; // time user has to click the next note in sequence
+  var TIME_LIMIT_INCREMENT = 1500; // additional time added per note
   var TIME_BETWEEN_NOTES = NOTE_DURATION + 500;
   var DIFFICULTY = 5;
   var NOTES = {};
@@ -13,24 +12,16 @@ function SimonGame() {
   var currSeq = [];
   var currIndex = 0;
   var timeoutFn = null;
-  var idleFn = null;
-
-  function startIdleFn() {
-    var n = 4;
-    idleFn = setInterval(function(){
-      NOTES[KEYS[(n % 4)]].play();
-      n++;
-    }, TIME_BETWEEN_NOTES);
-  }
-
-  function stopIdleFn() {
-    clearInterval(idleFn);
-  }
+  var intervalFn = null;
+  var modalIn = null;
 
   function resetState() {
     currSeq = [];
     currIndex = 0;
+    clearTimeout(timeoutFn);
+    clearInterval(intervalFn);
     timeoutFn = null;
+    intervalFn = null;
   }
 
   function pickRandomBox(){
@@ -46,16 +37,43 @@ function SimonGame() {
     return currSeq.push(pickRandomBox());
   }
 
-  function beginTimerCountdown(timelimit) {
+  function disableAllNotes() {
+    KEYS.forEach(function(key) {
+      NOTES[key].disable();
+    });
+  }
+
+  function enableAllNotes() {
+    KEYS.forEach(function(key) {
+      NOTES[key].enable();
+    });
+  }
+
+  function hideTimer() {
+    document.getElementById('timer').style.display = 'none';
+    document.getElementById('timer-spinner').style.animation = 'none';
+    document.getElementById('timer-filler').style.animation = 'none';
+    document.getElementById('timer-mask').style.animation = 'none';
+  }
+
+  function showTimer(time) {
+    console.log('time is ', time/1000);
+    document.getElementById('timer').style.display = 'flex';
+    document.getElementById('timer-spinner').style.animation = 'rota ' + time/1000 + 's linear 1';
+    document.getElementById('timer-filler').style.animation = 'fill ' + time/1000 + 's steps(1, end) 1';
+    document.getElementById('timer-mask').style.animation = 'mask ' + time/1000 + 's steps(1, end) 1';
+  }
+
+  function beginTimerCountdown(time) {
+    showTimer(time);
+    clearTimeout(timeoutFn);
     timeoutFn = setTimeout(function(){
+      hideTimer();
       endGame(false, 'timeout');
-    }, timelimit);
+    }, time);
   }
 
   function handleClick(key) {
-    // stop timer
-    clearTimeout(timeoutFn);
-
     // clicked wrong button
     if (key !== currSeq[currIndex]) {
       endGame(false, 'wrong button clicked');
@@ -71,6 +89,7 @@ function SimonGame() {
     // player clicks all notes in current sequence
     if ((currIndex + 1) === currSeq.length) {
       currIndex = 0;
+      clearTimeout(timeoutFn);
       generateSequence();
       playNextSequence();
       return;
@@ -78,21 +97,24 @@ function SimonGame() {
 
     // continuing as usual in the current sequence
     currIndex++;
-    beginTimerCountdown(TIME_LIMIT);
   }
 
   function playNextSequence() {
+    disableAllNotes();
+    hideTimer();
+
     // play all notes in currSeq that the user needs to imitate
     var n = 0;
-    var intervalFn = setInterval(function(){
+    intervalFn = setInterval(function(){
       if (n < currSeq.length) {
         NOTES[currSeq[n]].play();
         n++;
       } else {
+        enableAllNotes();
         clearInterval(intervalFn);
 
         // give user time to think
-        beginTimerCountdown(TIME_LIMIT_INITIAL);
+        beginTimerCountdown(TIME_LIMIT_INITIAL + TIME_LIMIT_INCREMENT * currSeq.length);
       }
     }, TIME_BETWEEN_NOTES);
   }
@@ -106,20 +128,26 @@ function SimonGame() {
     resetState();
 
     if (userWon) {
+      modalIn.openModal('victory');
       console.log('you won the game!');
       return;
     }
 
+    modalIn.openModal('end');
     console.log('you lost the game... ' + reason);
   }
 
   this.initialize = function() {
-    KEYS.forEach(function (key) {
+    KEYS.forEach(function(key) {
       NOTES[key] = new NoteBox(key, handleClick);
     }.bind(this));
 
-    // startIdleFn();
-    startGame();
+    modalIn = new Modals();
+    modalIn.initialize();
+    modalIn.setCallback('start', startGame);
+    modalIn.setCallback('end', startGame);
+    modalIn.setCallback('victory', startGame);
+    modalIn.openModal('start');
   };
 }
 

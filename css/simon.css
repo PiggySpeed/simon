@@ -1,15 +1,163 @@
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   background-color: black;
+  display: flex;
+  flex-flow: column;
   height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Pokemon Font Face */
+@font-face {
+  font-family: PokemonFont;
+  src: url(./pokemon-font.ttf);
+}
+
+h1, p, a {
+  font-family: PokemonFont, Arial, sans-serif;
+}
+
+/* Container */
+#container {
+  display: flex;
+  flex-flow: column;
+  flex: none;
+  height: 100%;
+  width: min-content;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Game Panel */
+/* Spinner from: https://css-tricks.com/css-pie-timer */
+#game-panel {
+  display: flex;
+  align-self: center;
+  height: 4rem;
+  width: 100%;
+  padding: 10px;
+  color: #FFF;
+}
+#timer {
+  display: none;
+  flex-flow: row;
+  flex: none;
+  align-items: center;
+  height: 2rem;
+  width: 40%;
+}
+#timer-wrapper {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  background-color: #000;
+}
+#timer-spinner {
+  border-radius: 1rem 0 0 1rem;
+  z-index: 2;
+  border-right: none;
+  animation: rota 5s linear 1;
+  background-color: #584180;
+}
+#timer-filler{
+  border-radius: 0 1rem 1rem 0;
+  z-index: 1;
+  border-left: none;
+  animation: fill 5s steps(1, end) 1;
+  left: 50%;
+  opacity: 0;
+}
+#timer-mask {
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  z-index: 3;
+  opacity: 1;
+  background: inherit;
+  animation: mask 5s steps(1, end) 1;
+}
+.timer-icon {
+  height: 2.5rem;
+  width: 2.5rem;
+  fill: #584180;
+}
+.pie {
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  background: #584180;
+  transform-origin: 100% 50%;
+}
+
+.wrapper {
+  position: relative;
+  margin: 40px auto;
+  background: white;
+}
+
+@keyframes rota {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fill {
+  0%        { opacity: 0; }
+  50%, 100% { opacity: 1; }
+}
+
+@keyframes mask {
+  0%        { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Modals */
+#start-modal, #end-modal, #victory-modal {
+  display: none;
+  position: absolute;
+  height: 30%;
+  width: 50%;
+  min-height: 300px;
+  min-width: 700px;
+  z-index: 5;
+  align-self: center;
+
+  padding: 1rem 1.5rem;
+
+  background-color: #584180;
+  color: #FFF;
+  border: 2px solid #FFF;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.modal-text {
+  height: 20%;
+}
+.modal-button, .gh-link {
+  text-align: center;
+  text-decoration: underline;
+}
+.modal-button:visited, .gh-link:visited {
+  color: #FFF;
+}
+.modal-button:hover, .gh-link:hover {
+  color: #ffd900;
 }
 
 /* Container for note boxes */
 #simon {
   display: flex;
-  height: 100%;
+  flex: none;
   align-items: center;
   justify-content: center;
   flex-direction: row;
+  height: min-content;
 }
 
 /* Note box elements */
