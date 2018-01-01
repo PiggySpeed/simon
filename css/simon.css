@@ -20,6 +20,7 @@ html, body {
 
 h1, p, a {
   font-family: PokemonFont, Arial, sans-serif;
+  margin: 0;
 }
 
 /* Container */
@@ -39,10 +40,17 @@ h1, p, a {
 #game-panel {
   display: flex;
   align-self: center;
+  justify-content: space-between;
   height: 4rem;
   width: 100%;
   padding: 10px;
   color: #FFF;
+}
+#diff-label {
+  white-space: pre;
+}
+.diff-label-container {
+  display: flex;
 }
 #timer {
   display: none;
@@ -94,7 +102,6 @@ h1, p, a {
   background: #584180;
   transform-origin: 100% 50%;
 }
-
 .wrapper {
   position: relative;
   margin: 40px auto;
@@ -135,9 +142,17 @@ h1, p, a {
   border-radius: 4px;
   text-align: center;
 }
-
 .modal-text {
-  height: 20%;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 5rem;
+  white-space: pre;
+}
+.modal-button {
+  align-self: flex-end;
 }
 .modal-button, .gh-link {
   text-align: center;
@@ -148,6 +163,28 @@ h1, p, a {
 }
 .modal-button:hover, .gh-link:hover {
   color: #ffd900;
+}
+.difficulty-range {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.5rem;
+  margin-bottom: 20px;
+}
+.difficulty-range a {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin: 0 10px;
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: #FFF;
+}
+.difficulty-range a:hover {
+  color: #ffd900;
+}
+.difficulty-range p {
+  margin-right: 10px;
 }
 
 /* Container for note boxes */

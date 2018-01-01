@@ -5,10 +5,10 @@ function SimonGame() {
   var KEYS = ['c', 'd', 'e', 'f'];
   var TIME_LIMIT_INITIAL = 5000; // time user has to begin clicking the sequence
   var TIME_LIMIT_INCREMENT = 1500; // additional time added per note
-  var TIME_BETWEEN_NOTES = NOTE_DURATION + 500;
-  var DIFFICULTY = 5;
+  var TIME_BETWEEN_NOTES = NOTE_DURATION + 250;
   var NOTES = {};
 
+  var difficulty = 1;
   var currSeq = [];
   var currIndex = 0;
   var timeoutFn = null;
@@ -57,7 +57,6 @@ function SimonGame() {
   }
 
   function showTimer(time) {
-    console.log('time is ', time/1000);
     document.getElementById('timer').style.display = 'flex';
     document.getElementById('timer-spinner').style.animation = 'rota ' + time/1000 + 's linear 1';
     document.getElementById('timer-filler').style.animation = 'fill ' + time/1000 + 's steps(1, end) 1';
@@ -69,19 +68,19 @@ function SimonGame() {
     clearTimeout(timeoutFn);
     timeoutFn = setTimeout(function(){
       hideTimer();
-      endGame(false, 'timeout');
+      endGame(false);
     }, time);
   }
 
   function handleClick(key) {
     // clicked wrong button
     if (key !== currSeq[currIndex]) {
-      endGame(false, 'wrong button clicked');
+      endGame(false);
       return;
     }
 
     // player passes victory condition
-    if ((currIndex + 1) === DIFFICULTY) {
+    if ((currIndex + 1) === difficulty) {
       endGame(true);
       return;
     }
@@ -119,22 +118,25 @@ function SimonGame() {
     }, TIME_BETWEEN_NOTES);
   }
 
-  function startGame() {
+  // begin the game with a set difficulty level
+  function startGame(level) {
+    difficulty = level;
+    document.getElementById('diff-label').textContent = ' ' + level;
+
     generateSequence();
     playNextSequence();
   }
 
-  function endGame(userWon, reason) {
-    resetState();
-
+  function endGame(userWon) {
     if (userWon) {
       modalIn.openModal('victory');
-      console.log('you won the game!');
-      return;
+    }
+    else {
+      modalIn.openModal('end');
+      document.getElementById('end-modal-text').textContent = ' ' + (currSeq.length - 1);
     }
 
-    modalIn.openModal('end');
-    console.log('you lost the game... ' + reason);
+    resetState();
   }
 
   this.initialize = function() {

@@ -43,6 +43,8 @@
           <div id="timer-mask"></div>
         </div>
       </div>
+      <div></div>
+      <div class="diff-label-container"><p>Difficulty level:</p><p id="diff-label"></p></div>
     </div>
 
     <!-- Note Boxes -->
@@ -56,21 +58,27 @@
     <!-- Modals -->
     <div id="start-modal">
       <h1>Simon</h1>
-      <a class="gh-link" href="https://github.com/PiggySpeed/simon">by JL 31/12/17</a>
-      <p class="modal-text">Click the blocks in the same pattern as shown.</p>
+      <a class="gh-link" href="https://github.com/PiggySpeed/simon" target="_blank">by JL 31/12/17</a>
+      <p class="modal-text">Click the blocks in the same<br/>pattern as shown.</p>
+      <div class="difficulty-range">
+        <p>DIFFICULTY: </p>
+        <a id="diff-5" href="#">5</a>
+        <a id="diff-10" href="#">10</a>
+        <a id="diff-15" href="#">15</a>
+      </div>
       <a id="start-modal-btn" class="modal-button" href="#">START</a>
     </div>
 
     <div id="end-modal">
       <h1>Simon</h1>
-      <a class="gh-link" href="https://github.com/PiggySpeed/simon">by JL 31/12/17</a>
-      <p class="modal-text">You lose! Your score was:</p>
+      <a class="gh-link" href="https://github.com/PiggySpeed/simon" target="_blank">by JL 31/12/17</a>
+      <span class="modal-text"><p>You lose! Your score was:</p><p id="end-modal-text"></p></span>
       <a id="end-modal-btn" class="modal-button" href="#">PLAY AGAIN</a>
     </div>
 
     <div id="victory-modal">
       <h1>Simon</h1>
-      <a class="gh-link" href="https://github.com/PiggySpeed/simon">by JL 31/12/17</a>
+      <a class="gh-link" href="https://github.com/PiggySpeed/simon" target="_blank">by JL 31/12/17</a>
       <p class="modal-text">You finished all rounds!<br/>That was easy wasn't it?</p>
       <a id="victory-modal-btn" class="modal-button" href="#">PLAY AGAIN</a>
     </div>
