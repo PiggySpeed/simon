@@ -147,7 +147,6 @@ function SimonGame() {
     modalIn = new Modals();
     modalIn.initialize();
     modalIn.setCallback('start', startGame);
-    modalIn.setCallback('end', startGame);
     modalIn.setCallback('victory', startGame);
     modalIn.openModal('start');
   };

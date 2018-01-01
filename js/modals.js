@@ -14,9 +14,10 @@ function Modals() {
       e.stopPropagation();
       self.closeModal(type);
 
-      // if (type === 'end') {
-      //   self.openModal('start');
-      // }
+      // TODO: do something about this
+      if (type === 'end') {
+        self.openModal('start');
+      }
     }
   }
 
@@ -43,10 +44,12 @@ function Modals() {
     modal.style.display = 'block';
 
     if (type === 'start') {
-      document.getElementById('diff-5').style.color = '#ffd900';
       DIFFICULTY_LEVELS.forEach(function(str) {
+        document.getElementById('diff-' + str).style.color = '#FFF';
         document.getElementById('diff-' + str).onclick = handleDifficultyClick(str);
-      })
+      });
+      difficulty = DIFFICULTY_LEVELS[0];
+      document.getElementById('diff-5').style.color = '#ffd900';
     }
   };
 
