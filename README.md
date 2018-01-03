@@ -1,6 +1,6 @@
 # Simon | UBC Launch Pad JavaScript Interview Project
 
-This fork can be viewed at: [https://simon-demo.herokuapp.com/](https://simon-demo.herokuapp.com/)
+A demo of this fork can be viewed at: [https://simon-demo.herokuapp.com/](https://simon-demo.herokuapp.com/)
 
 ---
 
